@@ -1,0 +1,69 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\bradt\\source\\repos\\ComicSorter\\C#\\ComicSorter_v2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{003D0386-1E1D-45CA-9C5B-64BBEB6F9C04}|ComicSorter\\ComicSorter.csproj|c:\\users\\bradt\\source\\repos\\comicsorter\\c#\\comicsorter_v2\\comicsorter\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{003D0386-1E1D-45CA-9C5B-64BBEB6F9C04}|ComicSorter\\ComicSorter.csproj|solutionrelative:comicsorter\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{003D0386-1E1D-45CA-9C5B-64BBEB6F9C04}|ComicSorter\\ComicSorter.csproj|C:\\Users\\bradt\\source\\repos\\ComicSorter\\C#\\ComicSorter_v2\\comicsorter\\comicsorterfresh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{003D0386-1E1D-45CA-9C5B-64BBEB6F9C04}|ComicSorter\\ComicSorter.csproj|solutionrelative:comicsorter\\comicsorterfresh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{003D0386-1E1D-45CA-9C5B-64BBEB6F9C04}|ComicSorter\\ComicSorter.csproj|C:\\Users\\bradt\\source\\repos\\ComicSorter\\C#\\ComicSorter_v2\\comicsorter\\comicsorter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{003D0386-1E1D-45CA-9C5B-64BBEB6F9C04}|ComicSorter\\ComicSorter.csproj|solutionrelative:comicsorter\\comicsorter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ComicSorter.cs",
+              "DocumentMoniker": "C:\\Users\\bradt\\source\\repos\\ComicSorter\\C#\\ComicSorter_v2\\ComicSorter\\ComicSorter.cs",
+              "RelativeDocumentMoniker": "ComicSorter\\ComicSorter.cs",
+              "ToolTip": "C:\\Users\\bradt\\source\\repos\\ComicSorter\\C#\\ComicSorter_v2\\ComicSorter\\ComicSorter.cs",
+              "RelativeToolTip": "ComicSorter\\ComicSorter.cs",
+              "ViewState": "AQIAADEAAAAAAAAAAAAQwF4AAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-26T16:30:25.769Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ComicSorterFresh.cs",
+              "DocumentMoniker": "C:\\Users\\bradt\\source\\repos\\ComicSorter\\C#\\ComicSorter_v2\\ComicSorter\\ComicSorterFresh.cs",
+              "RelativeDocumentMoniker": "ComicSorter\\ComicSorterFresh.cs",
+              "ToolTip": "C:\\Users\\bradt\\source\\repos\\ComicSorter\\C#\\ComicSorter_v2\\ComicSorter\\ComicSorterFresh.cs",
+              "RelativeToolTip": "ComicSorter\\ComicSorterFresh.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACAAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-26T16:33:32.703Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\bradt\\source\\repos\\ComicSorter\\C#\\ComicSorter_v2\\ComicSorter\\Program.cs",
+              "RelativeDocumentMoniker": "ComicSorter\\Program.cs",
+              "ToolTip": "C:\\Users\\bradt\\source\\repos\\ComicSorter\\C#\\ComicSorter_v2\\ComicSorter\\Program.cs",
+              "RelativeToolTip": "ComicSorter\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAABQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-26T16:23:21.516Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

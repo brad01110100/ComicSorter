@@ -85,7 +85,7 @@ namespace ComicSorter
                //ony bother if the carry over continues to happen
           }
 
-          private void sort(String path)//Same thing goes for here, i need to look more indepth into how C# handles folder/file manipulation for compying, moving, renaming, deleting before I can go any further. Pulling into Secacus doesn't give me much of that time.
+          private void sort(String path)
           {
                List<String> comics = new List<String>(File.ReadAllLines(@"C:\temp\Comics\comics list.txt"));
                List<String> files = new List<String>(Directory.EnumerateFiles(path).Select(f => Path.GetFileName(f)));

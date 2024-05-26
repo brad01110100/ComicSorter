@@ -7,143 +7,180 @@ using System.Text.RegularExpressions;
 
 namespace ComicSorter
 {
-     class ComicSorterFresh
-     {
-          List<FileObject> originalFiles = new List<FileObject>();
-          List<FileObject> orphanedFiles = new List<FileObject>();
+    class ComicSorterFresh
+    {
+        List<FileObject> originalFiles = new List<FileObject>();
+        List<FileObject> orphanedFiles = new List<FileObject>();
 
-          public String startDir = "";
+        public String startDir = "";
 
-          public void Start()
-          {
-               FolderRecursion(startDir);
+        public void Start()
+        {
+            CreateFolders();
+            FolderRecursion(startDir);
 
-               originalFiles = originalFiles.OrderBy(f => f.oFilename).ToList();
-               
-               NameStripping();
-               Sorting();
-               Cleanup();
-          }
+            originalFiles = originalFiles.OrderBy(f => f.Filename).ToList();
 
-          private void FolderRecursion(String path)
-          {
-               List<String> directories = new List<String>(Directory.EnumerateDirectories(path).Select(d => new DirectoryInfo(d).Name));
+            DetermineFolders();
+            Sorting();
+            Cleanup();
+        }
 
-               Int32 dirContentCount = Directory.GetFiles(path).Length;
+        private void CreateFolders()
+        {
+            string[] folderPaths = new string[]
+            {
+                @"D:\Download Staging\Comics\Downloads",
+                @"D:\Download Staging\Comics\Unsorted",
+                @"D:\Download Staging\Comics\Sorted",
+                @"D:\Download Staging\Comics\Unsupported",
+            };
 
-               if (dirContentCount != 0 && directories.Count != 0)
-               {
-                    List<Object> temp = new List<Object>(Directory.EnumerateFiles(path).Select(f => Path.GetFileName(f)));
+            foreach (string folderPath in folderPaths)
+            {
+                CreateFolderIfNotExists(folderPath);
+            }
+        }
 
-                    foreach (String file in temp)
+        /// <summary>
+        /// Find all the files in the "Downloads" folder. Recursive.
+        /// </summary>
+        private void FolderRecursion(String path)
+        {
+            List<String> directories = new List<String>(Directory.EnumerateDirectories(path).Select(d => new DirectoryInfo(d).Name));
+
+            Int32 dirContentCount = Directory.GetFiles(path).Length;
+
+            if (dirContentCount != 0 && directories.Count != 0)
+            {
+                List<Object> temp = new List<Object>(Directory.EnumerateFiles(path).Select(f => Path.GetFileName(f)));
+
+                foreach (String file in temp)
+                {
+                    originalFiles.Add(new FileObject { Filename = file, FileLocation = path });
+                }
+            }
+
+            if (directories.Count == 0)
+            {
+                List<Object> temp = new List<Object>(Directory.EnumerateFiles(path).Select(f => Path.GetFileName(f)));
+
+                foreach (String file in temp)
+                {
+                    originalFiles.Add(new FileObject { Filename = file, FileLocation = path });
+                }
+            }
+            else
+            {
+                foreach (String folder in directories)
+                {
+                    FolderRecursion(path + folder + "\\");
+                }
+            }
+        }
+
+        private void DetermineFolders()
+        {
+            // Remove file formats we're not interested in.
+            List<String> goodExt = new List<String>() { "cb7", "cbr", "cbt", "cbz", "pdf" };
+
+            foreach (FileObject file in originalFiles)
+            {
+                if (!goodExt.Contains(file.Filename.Substring(file.Filename.Length - 3)))
+                {
+                    file.Folder = "Unsupported";
+                    continue;
+                }
+
+                string selectBeforeYearRegex = @"^.*?(?=\(\b(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s\d{4}\)|\(\d{4}\))";
+                string selectBeforeNumberingRegex = @"^.*?(?=\b(?:Vol\.?\s|VOL\.?\s|VOLUME\s|v\d{1,2}\s|\d{2,3}\s))";
+
+                // Select before year (e.g., "(2024)", "(May 2024)".
+                Match match = Regex.Match(file.Filename, selectBeforeYearRegex);
+                string folderNameBeforeYear = match.Success ? match.Value.Trim() : null;
+
+                // Folder name before series (e.g., "012", "02", "Vol.").
+                match = Regex.Match(file.Filename, selectBeforeNumberingRegex);
+                string folderNameBeforeSeries = match.Success ? match.Value.Trim() : folderNameBeforeYear;
+
+                file.Folder = folderNameBeforeSeries;
+            }
+        }
+
+        private void Sorting()
+        {
+            string sortedDestination = @"D:\Download Staging\Comics\Sorted\";
+            string unsortedDestination = @"D:\Download Staging\Comics\Unsorted\";
+            string unsupportedDestination = @"D:\Download Staging\Comics\Unsupported\";
+
+            foreach (FileObject file in originalFiles)
+            {
+                bool successfullyCopied = false;
+
+                try
+                {
+                    if (file.Folder == "Unsupported")
                     {
-                         originalFiles.Add(new FileObject { oFilename = file, fileLocation = path });
+                        Console.WriteLine($"COPY TO UNSUPPORTED: {file.Filename}");
+                        File.Copy(file.FileLocation + file.Filename, unsupportedDestination + file.Filename, true);
+                        successfullyCopied = true;
                     }
-               }
-
-               if(directories.Count == 0)
-               {
-                     List<Object> temp = new List<Object>(Directory.EnumerateFiles(path).Select(f => Path.GetFileName(f)));
-
-                    foreach (String file in temp)
+                    else if (!String.IsNullOrEmpty(file.Folder))
                     {
-                         originalFiles.Add(new FileObject { oFilename = file, fileLocation = path });
-                    }
-               }
-               else
-               {
-                    foreach (String folder in directories)
-                    {
-                         FolderRecursion(path + folder + "\\");
-                    }
-               }
-          }
-
-          private void NameStripping()
-          {
-               List<String> goodExt = new List<String>(){ "cb7", "cbr", "cbt", "cbz", "pdf" };
-               
-               originalFiles.RemoveAll(e => !goodExt.Contains(e.oFilename.Substring(e.oFilename.Length - 3)));
-
-               foreach (FileObject file in originalFiles)
-               {
-                    file.nFilename = file.oFilename.Replace('_', ' ');
-
-                    String wasteRegex = ".*?(\\()(2)(0)(\\d)(\\d)(\\))";//takes the front of the file name up to the issue year
-                                   //this ^ is basically skip
-                    Regex rgx = new Regex(wasteRegex);
-                    String result = String.Join("", rgx.Split(file.nFilename));
-                    String fileExt = file.nFilename.Substring(file.nFilename.Length - 4);//Once the initial rewrite is finished change so that the list of filenames are checked before worked on so that they get removed prior to finding out they have the wron extension
-                    file.nFilename = file.nFilename.Replace(" " + result, fileExt);//Dont thing this is going to work the same as in Java. While at Newark work test against static string to get this to work before moving testing against any files.
-               }
-          }
-
-          private void Sorting()
-          {
-               String finalDestination = @"C:\temp\Comics\";
-               String newHome = "TO BE SORTED INTO RESPECTIVE FOLDERS";
-
-               List<String> comics = new List<String>(Directory.EnumerateDirectories(finalDestination).Select(d => new DirectoryInfo(d).Name));
-
-               foreach (FileObject file in originalFiles)
-               {
-                    Regex rgx = new Regex(".*?(\\s)(\\d)");
-                    String result = String.Join("", rgx.Split(file.nFilename));
-                    String comicName = file.nFilename.Substring(0, file.nFilename.Length - result.Length);
-
-                    if (comics.Contains(comicName))
-                    {
-                         Boolean succ = false;
-
-                         try
-                         {
-                              File.Copy(file.fileLocation + file.oFilename, finalDestination + comicName + "\\" + file.nFilename, true);
-                              succ = true;
-                         }
-                         catch (Exception e)
-                         {
-                              Console.WriteLine(e.ToString());
-                              orphanedFiles.Add(new FileObject { oFilename = file.oFilename, nFilename = file.nFilename, fileLocation = file.fileLocation });
-                         }
-
-                         if (succ)
-                         {
-                              Console.WriteLine("File:  " + (file.fileLocation + file.oFilename) + " successfully moved.");
-                              File.Delete(file.fileLocation + file.oFilename);
-                         }
+                        Console.WriteLine($"COPY TO SORTED: {file.Folder}\\{file.Filename}");
+                        CreateFolderIfNotExists(sortedDestination + file.Folder);
+                        File.Copy(file.FileLocation + file.Filename, sortedDestination + file.Folder + "\\" + file.Filename, true);
+                        successfullyCopied = true;
                     }
                     else
                     {
-                         orphanedFiles.Add(new FileObject { oFilename = file.oFilename, nFilename = file.nFilename, fileLocation = file.fileLocation });
+                        Console.WriteLine($"COPY TO UNSORTED: {file.Folder}\\{file.Filename}");
+                        File.Copy(file.FileLocation + file.Filename, unsortedDestination + file.Filename, true);
+                        successfullyCopied = true;
                     }
-               }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"EXCEPTION: {file.Folder} - {file.Filename}");
+                    Console.WriteLine(e.ToString());
+                }
 
-               foreach (FileObject orphan in orphanedFiles)
-               {
+                // Delete successfully copies files.
+                if (successfullyCopied)
+                {
+                    File.Delete(file.FileLocation + file.Filename);
+                }
+            }
+        }
 
-                    try
-                    {
-                         File.Copy(orphan.fileLocation + orphan.oFilename, finalDestination + newHome + "\\" + orphan.nFilename,true);
-                         File.Delete(orphan.fileLocation + orphan.oFilename);
-                    }
-                    catch (Exception e)
-                    {
-                         Console.WriteLine(e.ToString());
-                    }
-               }
-          }
+        private void Cleanup()
+        {
+            //Directory.Delete(startDir, true);
+            //Directory.CreateDirectory(startDir);
+        }
 
-          private void Cleanup()
-          {
-               Directory.Delete(startDir, true);
-               Directory.CreateDirectory(startDir);
-          }
-     }
 
-     class FileObject
-     {
-          public String oFilename;
-          public String nFilename;
-          public String fileLocation;
-     }
+        private static void CreateFolderIfNotExists(string folderPath)
+        {
+            // Check if the folder exists
+            if (!Directory.Exists(folderPath))
+            {
+                // Create the folder
+                Directory.CreateDirectory(folderPath);
+                Console.WriteLine($"Folder created at: {folderPath}");
+            }
+            else
+            {
+                Console.WriteLine($"Folder already exists at: {folderPath}");
+            }
+        }
+
+        class FileObject
+        {
+            public String Filename;
+            public String Folder;
+            public String FileLocation;
+        }
+
+    }
 }

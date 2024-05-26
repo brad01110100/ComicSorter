@@ -12,12 +12,11 @@ namespace ComicSorter
           {
                ComicSorterFresh cs = new ComicSorterFresh();
 
-               String downloadLocation = @"C:\temp\Downloads\";
-               String holdingLocation = @"C:\temp\Comics\TO BE SORTED INTO RESPECTIVE FOLDERS";//Downloaded from unconventional means.
-               String userInput = "";
+               String downloadLocation = @"D:\Download Staging\Comics\Downloads\";
+               String holdingLocation = @"D:\Download Staging\Comics\Unsorted\";
 
                Console.WriteLine("Where do you want to sort from?  Enter your choice:  ");
-               Console.WriteLine("1 \t Downloads folder\n2 \t TO BE SORTED folder\n3 \t Other - manual input location\n");
+               Console.WriteLine("1 \t Downloads folder\n2 \t TO BE SORTED folder\n");
 
                Int32 input = Convert.ToInt32(Console.ReadLine());
 
@@ -31,12 +30,6 @@ namespace ComicSorter
                          //2 TO BE SORTED FOLDER
                          cs.startDir = holdingLocation;
                          break;
-                    case 3:
-                         //3 other manual input
-                         Console.Write("Enter the location you would like to sort from:  ");
-                         userInput = Console.ReadLine();
-                         cs.startDir = userInput;
-                         break;
                     default:
                          Console.WriteLine("Failed to comply to directions. Terminating Life.");
                          Environment.Exit(0);
@@ -44,19 +37,6 @@ namespace ComicSorter
                }
 
                cs.Start();
-
-               //try
-               //{
-               //     Console.WriteLine("\n\nFailed Files:");
-
-               //     foreach(String f in cs.failed)
-               //     {
-               //          Console.WriteLine(f);
-               //     }
-
-               //     File.WriteAllLines(@"C:\temp\Comics\failed files.txt", cs.failed);
-               //}
-               //catch (Exception ex){}
 
                Console.ReadKey();
           }
